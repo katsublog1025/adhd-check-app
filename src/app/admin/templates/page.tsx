@@ -276,6 +276,7 @@ export default function TemplatesPage() {
 
       <div className="admin-nav">
         <Link href="/admin" className="admin-nav-item">ダッシュボード</Link>
+        <Link href="/admin/users" className="admin-nav-item">利用者管理</Link>
         <span className="admin-nav-item active">テンプレート管理</span>
         <Link href="/admin/notifications" className="admin-nav-item">通知履歴</Link>
         <Link href="/admin/test-mode" className="admin-nav-item">テストモード</Link>

@@ -88,6 +88,7 @@ export default function AdminDashboard() {
       {/* Navigation */}
       <div className="admin-nav">
         <span className="admin-nav-item active">ダッシュボード</span>
+        <Link href="/admin/users" className="admin-nav-item">利用者管理</Link>
         <Link href="/admin/templates" className="admin-nav-item">テンプレート管理</Link>
         <Link href="/admin/notifications" className="admin-nav-item">通知履歴</Link>
         <Link href="/admin/test-mode" className="admin-nav-item">テストモード</Link>

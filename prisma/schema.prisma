@@ -47,7 +47,7 @@ model DailyCheckRecord {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  user     User         @relation(fields: [userId], references: [id])
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   template TaskTemplate @relation(fields: [templateId], references: [id])
 
   @@unique([userId, templateId, targetDate])
@@ -65,7 +65,7 @@ model WeeklyCheckRecord {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, weekStart])
 }
@@ -82,5 +82,5 @@ model NotificationLog {
   status     String   @default("sent") // sent, failed
   createdAt  DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
