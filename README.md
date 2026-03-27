@@ -1,36 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ADHD業務チェック管理アプリ
 
-## Getting Started
+ADHD傾向のあるスタッフ向けの業務チェック管理Webアプリです。  
+あらかじめ決められた業務チェック項目を、毎日順番に1件ずつ処理することに特化しています。
 
-First, run the development server:
+## 🚀 ローカル起動手順
+
+### 前提条件
+- Node.js 18以上がインストールされていること
+
+### 起動手順
 
 ```bash
+# 1. プロジェクトディレクトリへ移動
+cd adhd-check-app
+
+# 2. 依存パッケージインストール（初回のみ）
+npm install
+
+# 3. データベース作成・マイグレーション（初回のみ）
+npx prisma migrate dev --name init
+
+# 4. 初期データ投入（初回のみ）
+npx prisma db seed
+
+# 5. 開発サーバー起動
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ブラウザで **http://localhost:3000** を開いてください。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### テストアカウント
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 役割 | ログインID | パスワード |
+|------|-----------|-----------|
+| 管理者 | `admin` | `admin123` |
+| 利用者 | `yamada` | `user123` |
+| 利用者 | `suzuki` | `user123` |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📱 画面一覧
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 利用者向け
+| 画面 | URL | 概要 |
+|------|-----|------|
+| ログイン | `/` | ユーザー名+パスワードでログイン |
+| チェック実行 | `/user` | 「今やること1件」を大きく表示。完了/未実施を操作 |
+| 履歴 | `/user/history` | 過去の実施履歴を日付ごとに表示 |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 管理者向け
+| 画面 | URL | 概要 |
+|------|-----|------|
+| ダッシュボード | `/admin` | 利用者ごとの当日チェック状況 |
+| 利用者詳細 | `/admin/users/[id]` | 日次/週次/月次の実施状況 |
+| テンプレート管理 | `/admin/templates` | チェック項目の追加・編集・削除 |
+| 通知履歴 | `/admin/notifications` | メール送信履歴の一覧 |
+| テストモード | `/admin/test-mode` | 利用者画面の疑似体験 |
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🗄️ データベース設計
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| テーブル | 説明 |
+|---------|------|
+| `User` | 利用者・管理者情報 |
+| `TaskTemplate` | チェック項目テンプレート（区分・表示順） |
+| `DailyCheckRecord` | 日次チェック記録（状態・完了日時・未実施理由） |
+| `WeeklyCheckRecord` | 週次チェック記録 |
+| `NotificationLog` | メール通知送信履歴 |
+
+---
+
+## 📧 メール通知仕様
+
+- **方式**: Nodemailer + [Ethereal Email](https://ethereal.email/)（テスト用仮想メール）
+- **送信トリガー**: 利用者がその日の全チェック項目を完了した時 / 週次確認完了時
+- **確認方法**: サーバーログに表示されるEthereal Preview URLをブラウザで開く
+- **注意**: テストモード中はメール通知は送信されません
+
+---
+
+## 🧪 テストモードの使い方
+
+1. 管理者（`admin`）でログイン
+2. 「テストモード」をクリック
+3. 利用者を選択して「テストモードを開始」
+4. 利用者と同じチェック画面を疑似体験
+5. 画面上部のバナーから「管理者に戻る」で復帰
+
+---
+
+## 🛠️ 採用技術
+
+| 技術 | 用途 |
+|------|------|
+| Next.js 16 (App Router) | フロントエンド + API |
+| Prisma 6 + SQLite | ORM + ファイルベースDB |
+| iron-session | セッション管理 |
+| Nodemailer + Ethereal | メール通知テスト |
+| Vanilla CSS | ADHD配慮のミニマルデザイン |
+
+---
+
+## 📋 初期登録チェック項目
+
+### 出勤時（4件）
+1. Teams 起動・オンライン確認
+2. ZOOM 起動確認
+3. 業務用電話の携帯確認
+4. メール確認（未読・緊急案件チェック）
+
+### 業務中（3件）
+5. Teams オンライン状態の維持
+6. 電話を手元に置いているか
+7. 会員対応後、通知・メッセージ見落とし確認
+
+### 閉店前・退勤前（3件）
+8. メール確認・返信
+9. Teams・ZOOM の状態確認
+10. 翌日分の連絡事項・引継ぎの確認
+
+### 週次確認（2件）
+11. 確認漏れ・遅延がなかったか振り返り
+12. 困ったこと・サポートが必要なことを責任者に報告
+
+---
+
+## 💡 今後の改善案
+
+### ADHD配慮UIの強化
+- プログレスバーのアニメーション・サウンドフィードバック
+- 完了時の達成感演出（紙吹雪エフェクト等）
+- タイマー表示（各タスクの所要時間目安）
+- ダークモード対応
+- フォントサイズ調整機能
+
+### 通知の見直し
+- LINE / Slack連携
+- 未完了リマインダー（一定時間経過で自動通知）
+- プッシュ通知対応（PWA化）
+
+### 週次提出フローの改善
+- 週次チェック専用画面
+- 自動リマインド（金曜日午後に通知）
+- 週次レポート自動生成
+
+### 管理者の確認工数削減
+- 自動サマリーレポート（PDF出力）
+- 異常検知アラート（3日連続未完了等）
+- ダッシュボードのグラフ表示
+
+### セキュリティと認証強化
+- bcryptによるパスワードハッシュ化
+- JWT / NextAuth.jsによる本格認証
+- HTTPS対応
+- CSRFトークン
+- 入力バリデーション強化

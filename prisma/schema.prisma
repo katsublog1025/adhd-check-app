@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  loginId   String   @unique
+  password  String
+  role      String   @default("user") // "admin" or "user"
+  email     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  dailyChecks   DailyCheckRecord[]
+  weeklyChecks  WeeklyCheckRecord[]
+  notifications NotificationLog[]
+}
+
+model TaskTemplate {
+  id        Int      @id @default(autoincrement())
+  title     String
+  category  String   // 出勤時, 業務中, 閉店前・退勤前, 週次確認
+  sortOrder Int
+  isWeekly  Boolean  @default(false)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  dailyChecks DailyCheckRecord[]
+}
+
+model DailyCheckRecord {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  templateId  Int
+  targetDate  String    // YYYY-MM-DD
+  status      String    @default("pending") // pending, done, skipped
+  completedAt DateTime?
+  skipReason  String?
+  memo        String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user     User         @relation(fields: [userId], references: [id])
+  template TaskTemplate @relation(fields: [templateId], references: [id])
+
+  @@unique([userId, templateId, targetDate])
+}
+
+model WeeklyCheckRecord {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  weekStart   String    // YYYY-MM-DD (Monday)
+  weekEnd     String    // YYYY-MM-DD (Sunday)
+  status      String    @default("pending") // pending, done, skipped
+  completedAt DateTime?
+  skipReason  String?
+  memo        String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, weekStart])
+}
+
+model NotificationLog {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  type       String   // daily_complete, weekly_complete
+  targetDate String
+  sentAt     DateTime @default(now())
+  emailTo    String
+  subject    String
+  body       String
+  status     String   @default("sent") // sent, failed
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
