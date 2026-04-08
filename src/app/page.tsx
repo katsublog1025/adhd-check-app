@@ -85,11 +85,6 @@ export default function LoginPage() {
           {loading ? 'ログイン中...' : 'ログイン'}
         </button>
 
-        <div style={{ marginTop: '24px', fontSize: '0.8rem', color: '#9CA3AF', textAlign: 'center' }}>
-          <p>テストアカウント</p>
-          <p>利用者: yamada / user123</p>
-          <p>管理者: admin / admin123</p>
-        </div>
       </form>
     </div>
   );
