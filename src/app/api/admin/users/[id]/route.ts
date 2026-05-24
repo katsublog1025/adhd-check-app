@@ -73,6 +73,7 @@ export async function GET(
       byDate[r.targetDate].push({
         title: r.template.title,
         status: r.status,
+        completedAt: r.completedAt,
         skipReason: r.skipReason,
       });
     }

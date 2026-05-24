@@ -155,7 +155,14 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                   <div key={r.id} className="history-item">
                     <span className="history-item-icon">{statusIcon(r.status)}</span>
                     <div style={{ flex: 1 }}>
-                      <div className="history-item-title">{r.title}</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="history-item-title">{r.title}</span>
+                        {r.completedAt && (
+                          <span className="history-item-time">
+                            {new Date(r.completedAt).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        )}
+                      </div>
                       {r.skipReason && (
                         <div style={{ fontSize: '0.8rem', color: 'var(--color-warning)' }}>
                           理由: {r.skipReason}
@@ -186,6 +193,11 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                       <div key={i} className="history-item">
                         <span className="history-item-icon">{statusIcon(r.status)}</span>
                         <span className="history-item-title">{r.title}</span>
+                        {r.completedAt && (
+                          <span className="history-item-time">
+                            {new Date(r.completedAt).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>
