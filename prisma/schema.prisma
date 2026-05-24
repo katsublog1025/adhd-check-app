@@ -14,12 +14,14 @@ model User {
   password  String
   role      String   @default("user") // "admin" or "user"
   email     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   dailyChecks   DailyCheckRecord[]
   weeklyChecks  WeeklyCheckRecord[]
   notifications NotificationLog[]
+  loginHistory  LoginHistory[]
 }
 
 model TaskTemplate {
@@ -81,6 +83,16 @@ model NotificationLog {
   body       String
   status     String   @default("sent") // sent, failed
   createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LoginHistory {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  loginAt   DateTime @default(now())
+  ipAddress String?
+  userAgent String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

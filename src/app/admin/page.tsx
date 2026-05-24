@@ -91,6 +91,7 @@ export default function AdminDashboard() {
         <Link href="/admin/users" className="admin-nav-item">利用者管理</Link>
         <Link href="/admin/templates" className="admin-nav-item">テンプレート管理</Link>
         <Link href="/admin/notifications" className="admin-nav-item">通知履歴</Link>
+        <Link href="/admin/login-history" className="admin-nav-item">ログイン履歴</Link>
         <Link href="/admin/test-mode" className="admin-nav-item">テストモード</Link>
       </div>
 
@@ -146,6 +147,11 @@ export default function AdminDashboard() {
                 <div key={record.id} className="history-item">
                   <span className="history-item-icon">{statusIcon(record.status)}</span>
                   <span className="history-item-title">{record.title}</span>
+                  {record.completedAt && (
+                    <span className="history-item-time">
+                      {new Date(record.completedAt).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  )}
                   {record.skipReason && (
                     <span className="history-item-reason" title={record.skipReason}>
                       {record.skipReason}

@@ -712,6 +712,83 @@ body {
   color: var(--color-text-secondary);
 }
 
+/* --- History Item Time --- */
+.history-item-time {
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  flex-shrink: 0;
+  background: var(--color-primary-light);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+/* --- Login History --- */
+.login-history-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  transition: box-shadow 0.2s;
+}
+
+.login-history-item:hover {
+  box-shadow: var(--shadow);
+}
+
+.login-history-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.login-history-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-history-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.login-history-login-id {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  background: #F3F4F6;
+  padding: 1px 8px;
+  border-radius: 4px;
+}
+
+.login-history-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.login-history-datetime {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.login-history-relative {
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.login-history-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
 /* --- Test Mode Banner --- */
 .test-mode-banner {
   background: var(--color-warning-light);

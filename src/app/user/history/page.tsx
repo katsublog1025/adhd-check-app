@@ -92,6 +92,11 @@ export default function HistoryPage() {
             <div key={record.id} className="history-item">
               <span className="history-item-icon">{statusIcon(record.status)}</span>
               <span className="history-item-title">{record.title}</span>
+              {record.completedAt && (
+                <span className="history-item-time">
+                  {new Date(record.completedAt).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              )}
               {record.skipReason && (
                 <span className="history-item-reason" title={record.skipReason}>
                   理由あり

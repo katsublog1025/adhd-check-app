@@ -19,6 +19,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ログイン履歴を記録
+    const ipAddress = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const userAgent = request.headers.get('user-agent') || 'unknown';
+
+    await prisma.$transaction([
+      prisma.loginHistory.create({
+        data: {
+          userId: user.id,
+          ipAddress,
+          userAgent,
+        },
+      }),
+      prisma.user.update({
+        where: { id: user.id },
+        data: { lastLoginAt: new Date() },
+      }),
+    ]);
+
     const session = await getIronSession<SessionData>(await cookies(), sessionOptions);
     session.userId = user.id;
     session.userName = user.name;
