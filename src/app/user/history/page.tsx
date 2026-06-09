@@ -86,7 +86,12 @@ export default function HistoryPage() {
         <div key={day.date} className="history-day">
           <div className="history-date">
             <span>{day.date}</span>
-            {dayBadge(day)}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="history-rate">
+                {Math.round((day.completedCount / day.totalCount) * 100)}%
+              </span>
+              {dayBadge(day)}
+            </div>
           </div>
           {day.records.map((record) => (
             <div key={record.id} className="history-item">

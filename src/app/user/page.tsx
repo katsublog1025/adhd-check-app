@@ -167,9 +167,10 @@ export default function UserCheckPage() {
           <p className="complete-subtitle">
             すべてのチェック項目が完了しました。<br />お疲れさまでした！
           </p>
-          <p className="text-secondary" style={{ fontSize: '0.85rem' }}>
-            {data.completedCount} / {data.totalCount} 件完了
-          </p>
+          <div className="achievement-badge">
+            <span className="achievement-rate">達成率 100%</span>
+            <span className="achievement-count">{data.completedCount} / {data.totalCount} 件完了</span>
+          </div>
         </div>
       )}
 
@@ -177,7 +178,10 @@ export default function UserCheckPage() {
       {data && !data.allDone && data.currentTask && (
         <div className="check-card">
           <div className="check-progress">
-            {data.completedCount} / {data.totalCount} 件完了
+            <span>{data.completedCount} / {data.totalCount} 件完了</span>
+            <span className="check-progress-rate">
+              {Math.round((data.completedCount / data.totalCount) * 100)}%
+            </span>
           </div>
           <div className="check-progress-bar">
             <div
